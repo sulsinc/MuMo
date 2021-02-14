@@ -1,9 +1,9 @@
 # MuMo
 The MuMo project is an attempt to make an open source easy to setup platform to monitor environmental conditions of multiple sensors using IOT Lora modules and off the shelf hardware. 
 
-MuMo stands for Museum Monitoring since the initial founder of the project is the fashion museum in Antwerp (named MoMu) and developed in collaboration with the University of Antwerp - Department of Product Development.  
+MuMo stands for 'Museum Monitoring' and refers to the initial founder and prototype developer of the project, which is the fashion museum in Antwerp (named MoMu). MuMo is developed in collaboration with the University of Antwerp - Department of Product Development.  
 
-The project consists of 3 main parts. A sensor node design, a gateway that also houses various sensors and a dashboard that visualizes all recorded measurements and can alert users of any out of bounds values. 
+The project consists of 3 main parts. A sensor node design, a gateway that also houses various sensors and a dashboard to visualize all recorded measurements and to alert users of any out of bound values. 
 
 <img src="documentation/0_1.jpg"  height="250" /> <img src="documentation/0_2.png"  height="250" />
 
@@ -11,9 +11,9 @@ The project consists of 3 main parts. A sensor node design, a gateway that also 
 
 The sensor node is built around a Lorawan Seeed board that contains a ATSAMD21 processor (arduino zero compatible) and a RHF76 Lora module. 
 
-It features Seeed grove sensor connectors that can accommodate a series of sensor. In this project we chose a BME680 that records environment temperature, relative humidity and barometric pressure and a TSL2561 to measure visible lux values. 
+It features Seeed grove sensor connectors that can accommodate a series of sensors. In this project we chose a BME680 that records environment temperature, relative humidity and barometric pressure and a TSL2561 to measure visible light values (in lux). 
 
-To power the unit for a long period of time we house 6 AA batteries that should last around two years (depending on the frequency of measurements sent). 
+To power the unit for a long period of time, we use 6 AA batteries that should give the node an operating cycle of around two years (depending on the frequency of measurements sent). 
 
 All in a 3D printer optimized housing and programmable without special tools. 
 
@@ -38,6 +38,10 @@ Python code on the Pi records all measurements like is done on the Nodes themsel
 A night vision camera can be placed in various locations around the unit to record bug traps. It provides a daily updated picture that can give a history log of events that occurred.  
 
 This unit also features a 3D printer optimized housing and is programmable without specialist tools. 
+
+### The Gateway (Ready-made option TTN indoor gateway)
+
+Tf you are only interested in the using the functionalities of the nodes and dashboard, here is an easy and cheap solution. You can order a The Things Network Indoor Gateway.  You can activate this ready-made gateway in less that 5 minutes and receive data from your nodes and forward it to The Things Network. You can find more information [here]  (https://www.thethingsnetwork.org/docs/gateways/thethingsindoor/index.html)
 
 ### The Dashboard 
 
