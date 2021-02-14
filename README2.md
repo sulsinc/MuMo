@@ -47,7 +47,7 @@ Tf you are only interested in the functionalities of the sensor nodes and dashbo
 
 ### The Dashboard 
 
-The dashboard visualizes the data received by The Things Network. It shows the latest measurements captured by the sensors from the nodes and gateway in one application. And shows graph of all recorded measurements up to date. It gives a manageable overview to setup alerts for any out of bound recordings and can be integrated in other platforms (if desired). On top if this the calibration of the sensors and users access is managed in this dashboard. 
+The dashboard visualizes the data received by The Things Network. It shows the latest measurements captured by the sensors from the nodes and gateway in one application. And shows graph of all recorded measurements up to date. It gives a manageable overview to setup alerts for any out of bound recordings and can be integrated in other platforms (if desired). On top of this, the calibration of the sensors and user access is managed with this dashboard. 
 
 Requirements: 
 
