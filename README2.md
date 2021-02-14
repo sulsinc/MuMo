@@ -39,15 +39,15 @@ A night vision camera can be placed in various locations around the unit to reco
 
 This unit also features a 3D printer optimized housing and is programmable without specialist tools. 
 
-### The Gateway (Ready-made option TTN indoor gateway)
+### The Gateway (Ready-made option The Things Indoor Gateway)
 
-Tf you are only interested in the using the functionalities of the nodes and dashboard, here is an easy and cheap solution. You can order a The Things Network Indoor Gateway.  You can activate this ready-made gateway in less that 5 minutes and receive data from your nodes and forward it to The Things Network. You can find more information [here](https://www.thethingsnetwork.org/docs/gateways/thethingsindoor/index.html)
+Tf you are only interested in the functionalities of the sensor nodes and dashboard, there is an easy and cheap solution. You can order a The Things Indoor Gateway and activate this ready-made gateway in less that 5 minutes. This gateway only receives data from your nodes and forwards it to The Things Network. You can find more information [here](https://www.thethingsnetwork.org/docs/gateways/thethingsindoor/index.html)
 
 <img src="documentation/TTIG2.jpg"  height="250" /> 
 
 ### The Dashboard 
 
-The dashboard makes the data received by the things network from all gateways and nodes visual by showing the latest measurements of all sensors. And shows graph of all recorded measurements up to date. It gives a manageable overview to setup alerts for any out of bound recordings and can be integrated in other platforms as desired. 
+The dashboard visualizes the data received by The Things Network. It shows the latest measurements captured by the sensors from the nodes and gateway in one application. And shows graph of all recorded measurements up to date. It gives a manageable overview to setup alerts for any out of bound recordings and can be integrated in other platforms (if desired). On top if this the calibration of the sensors and users access is managed in this dashboard. 
 
 Requirements: 
 
@@ -57,14 +57,13 @@ Requirements:
 
 ## Open source 
 
-All the development done in this project is open to be used, modified and shared if credits are given.  
+All the development done for this project is open to be used, modified and shared if credits are given.  
 
 In this github you can find:  
 - Shopping lists for all parts that we used. 
 - .Stl files to print any of the housings. 
 - Codes for the nodes, gateways and dashboard. 
 - Manuals to take you through the assembly step by step. 
-
 
 
 # Where to find all parts:
@@ -86,8 +85,8 @@ In this github you can find:
 
 # Contributions
 
-The MuMo project is a collaboration between [MoMu](https://www.momu.be/en/) and the [university of antwerp](https://www.uantwerpen.be/nl/studeren/aanbod/alle-opleidingen/productontwikkeling-studeren/) [Antwerp design factory](https://www.uantwerpen.be/nl/projecten/mondmaskers/over-ons/antwerp-design-factory/).
+The MuMo project is a collaboration between [MoMu](https://www.momu.be/en/) and the [University of Antwerp](https://www.uantwerpen.be/nl/studeren/aanbod/alle-opleidingen/productontwikkeling-studeren/) [Antwerp design factory](https://www.uantwerpen.be/nl/projecten/mondmaskers/over-ons/antwerp-design-factory/).
 
-Funded by the Flemish Government [innovatieve-partnerprojecten](https://www.vlaanderen.be/cjm/nl/cultuur/cultuur-en-economie/innovatieve-partnerprojecten) Project: Developing a IOT Datalogger for Museums using LoRaWan
+Funded by the Flemish Government as a [Innovatieve-Partnerproject](https://www.vlaanderen.be/cjm/nl/cultuur/cultuur-en-economie/innovatieve-partnerprojecten) under the name: Developing a IOT Datalogger for Museums using LoRaWan
 
-<img src="documentation/momu.png" width="30%" />  <img src="documentation/ADF.png"  width="40%" /> <img src="documentation/flanders_logo.jpg" width="30%" /> 
+<img src="documentation/momu.png" width="30%" />  <img src="documentation/ADF.png"  width="60%" /> <img src="documentation/flanders_logo.jpg" width="30%" /> 
