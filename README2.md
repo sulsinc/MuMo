@@ -87,6 +87,6 @@ In this github you can find:
 
 The MuMo project is a collaboration between [MoMu](https://www.momu.be/en/) and the [University of Antwerp](https://www.uantwerpen.be/nl/studeren/aanbod/alle-opleidingen/productontwikkeling-studeren/) [Antwerp design factory](https://www.uantwerpen.be/nl/projecten/mondmaskers/over-ons/antwerp-design-factory/).
 
-Funded by the Flemish Government as a [Innovatieve-Partnerproject](https://www.vlaanderen.be/cjm/nl/cultuur/cultuur-en-economie/innovatieve-partnerprojecten) under the name: Developing a IOT Datalogger for Museums using LoRaWan
+Funded by the Flemish Government as a [Innovatief Partnerproject](https://www.vlaanderen.be/cjm/nl/cultuur/cultuur-en-economie/innovatieve-partnerprojecten) under the name: Developing a IOT Datalogger for Museums using LoRaWan
 
 <img src="documentation/momu.png" width="30%" />  <img src="documentation/ADF.png"  width="60%" /> <img src="documentation/flanders_logo.jpg" width="30%" /> 
