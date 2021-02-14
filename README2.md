@@ -41,7 +41,7 @@ This unit also features a 3D printer optimized housing and is programmable witho
 
 ### The Gateway (Ready-made option TTN indoor gateway)
 
-Tf you are only interested in the using the functionalities of the nodes and dashboard, here is an easy and cheap solution. You can order a The Things Network Indoor Gateway.  You can activate this ready-made gateway in less that 5 minutes and receive data from your nodes and forward it to The Things Network. You can find more information [here]  (https://www.thethingsnetwork.org/docs/gateways/thethingsindoor/index.html)
+Tf you are only interested in the using the functionalities of the nodes and dashboard, here is an easy and cheap solution. You can order a The Things Network Indoor Gateway.  You can activate this ready-made gateway in less that 5 minutes and receive data from your nodes and forward it to The Things Network. You can find more information [here](https://www.thethingsnetwork.org/docs/gateways/thethingsindoor/index.html)
 
 ### The Dashboard 
 
