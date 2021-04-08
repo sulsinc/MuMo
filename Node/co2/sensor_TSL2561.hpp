@@ -10,7 +10,13 @@ namespace sensor {
     class TSL2561
     {
     public:
+        struct Data
+        {
+            unsigned int lux;
+        };
+
         bool valid() const {return valid_;}
+
         bool setup()
         {
             i2c::setup();
@@ -25,6 +31,19 @@ namespace sensor {
             valid_ = true;
             return true;
         }
+
+        bool measure(Data &data)
+        {
+            if (!valid_)
+                return false;
+
+            sensors_event_t event;
+            tsl_.getEvent(&event);
+            data.lux = event.light;
+
+            return true;
+        }
+
     private:
         bool valid_ = false;
         Adafruit_TSL2561_Unified tsl_{0x29, 12345};

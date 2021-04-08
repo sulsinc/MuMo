@@ -38,6 +38,21 @@ namespace sensor {
             valid_ = true;
             return true;
         }
+
+        bool measure(Data &data)
+        {
+            if (!valid_)
+                return false;
+            if (!bme_.performReading())
+                return false;
+
+            data.temperature = bme_.temperature;
+            data.humidity = bme_.humidity;
+            data.pressure = bme_.pressure;
+
+            return false;
+        }
+
     private:
         bool valid_ = false;
         Adafruit_BME680 bme_;

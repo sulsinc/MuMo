@@ -1,19 +1,20 @@
-#ifndef HEADER_message_Version1_hpp_ALREADY_INCLUDED
-#define HEADER_message_Version1_hpp_ALREADY_INCLUDED
+#ifndef HEADER_message_Version2_hpp_ALREADY_INCLUDED
+#define HEADER_message_Version2_hpp_ALREADY_INCLUDED
 
 #include "board_LoraWan.hpp"
 #include "sensor_BME680.hpp"
 #include "sensor_TSL2561.hpp"
+#include "sensor_SCD30.hpp"
 #include "message_util.hpp"
 
 namespace message { 
 
-    class Version1
+    class Version2
     {
     public:
-        static constexpr unsigned int version = 1;
+        static constexpr unsigned int version = 2;
 
-        Version1()
+        Version2()
         {
             char *ptr = buffer_+0;
             write_uint8(ptr, version);
@@ -38,19 +39,26 @@ namespace message {
             char *ptr = buffer_+8;
             write_uint16(ptr, data.lux);
         }
+        void set(const sensor::SCD30::Data &data)
+        {
+            char *ptr = buffer_+10;
+            write_uint16(ptr, data.co2);
+            write_float8_8(ptr, data.temperature);
+            write_float8_8(ptr, data.relative_humidity);
+        }
 
         char *data() { return buffer_; }
         unsigned int size() const { return sizeof(buffer_); }
 
         void print() const
         {
-            Serial.println("Version1 message");
+            Serial.println("Version2 message");
             for (unsigned int i = 0; i < sizeof(buffer_); ++i)
                 Serial.println((int)buffer_[i]);
         }
 
     private:
-        char buffer_[10];
+        char buffer_[16];
     };
 
 } 
