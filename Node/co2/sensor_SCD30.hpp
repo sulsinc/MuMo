@@ -18,8 +18,12 @@ namespace sensor {
         };
 
         bool valid() const {return valid_;}
+
         bool setup()
         {
+            if (valid_)
+                return;
+
             i2c::setup();
 
             if (!scd_.begin())
@@ -36,11 +40,13 @@ namespace sensor {
         {
             if (!scd_.dataReady())
                 return false;
+
             if (!scd_.read())
                 return false;
             data.co2 = scd_.CO2;
             data.temperature = scd_.temperature;
             data.relative_humidity = scd_.relative_humidity;
+
             return true;
         }
 

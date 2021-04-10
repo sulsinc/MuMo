@@ -18,8 +18,12 @@ namespace sensor {
         };
 
         bool valid() const {return valid_;}
+
         bool setup()
         {
+            if (valid_)
+                return;
+
             i2c::setup();
 
             if (!bme_.begin(0x76))
@@ -28,12 +32,13 @@ namespace sensor {
                 return false;
             }
 
-            //-- Set up BME680 oversampling and filter initialization --//
+            //Set up BME680 oversampling and filter initialization
             bme_.setTemperatureOversampling(BME680_OS_8X); //1,2,4,8 of 16X
             bme_.setHumidityOversampling(BME680_OS_8X); //1,2,4,8 of 16X
             bme_.setPressureOversampling(BME680_OS_4X); //1,2,4,8 of 16X
             bme_.setIIRFilterSize(BME680_FILTER_SIZE_0); //Filter size for the resistance? 0, 1, 3, 7, 15, 31, 63, 127
-            /* Disabled the GAS heater to save power. */
+
+            //Disabled the GAS heater to save power.
             bme_.setGasHeater(0, 0); // 0*C for 0 ms
 
             valid_ = true;
@@ -44,9 +49,9 @@ namespace sensor {
         {
             if (!valid_)
                 return false;
+
             if (!bme_.performReading())
                 return false;
-
             data.temperature = bme_.temperature;
             data.humidity = bme_.humidity;
             data.pressure = bme_.pressure;

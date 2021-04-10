@@ -1,12 +1,13 @@
+#include "board_LoraWan.hpp"
 #include "sensor_BME680.hpp"
 #include "sensor_TSL2561.hpp"
 #include "sensor_SCD30.hpp"
 #include "com_Message.hpp"
 #include "com_Lora.hpp"
-#include "board_LoraWan.hpp"
-#include "clock_RealTime.hpp"
-#include "device_subsoil.hpp"
+#include "com_ids_subsoil.hpp"
 #include <type_traits>
+
+#define debug_mode 0
 
 board::LoraWan my_board;
 
@@ -28,36 +29,44 @@ void each_sensor(Ftor &&ftor)
 
 com::Message message;
 
+void take_all_measurements()
+{
+    auto take_one_measurement = [&](auto &sensor, const char *name){
+        if (!sensor.valid())
+            return;
+
+        Serial.print(name); Serial.println(" is valid");
+
+        using Sensor = decltype(sensor);
+        typename std::remove_reference_t<Sensor>::Data my_data;
+        if (!sensor.measure(my_data))
+        {
+            Serial.println("Warning: could not take measurement");
+            return;
+        }
+
+        message.set(my_data);
+    };
+    each_sensor(take_one_measurement);
+}
+
 com::Lora lora_com;
 
-clock::RealTime rt_clock;
-
 void setup(void) {
-  auto setup_sensor = [](auto &sensor, const char *name){
-      sensor.setup();
-  };
-  each_sensor(setup_sensor);
+    auto setup_sensor = [](auto &sensor, const char *name){
+        sensor.setup();
+    };
+    each_sensor(setup_sensor);
 
-  const auto device_info = device::subsoil();
-  lora_com.setup(device_info);
+    const auto ids = com::ids::subsoil();
+    lora_com.setup(ids);
 
-  my_board.led(false);
+    my_board.led(false);
 
-  rt_clock.setup();
-
-  delay(500);
-  //perform first measurement on all sensors
-  auto take_measurement = [&](auto &sensor, const char *name){
-      if (!sensor.valid())
-          return;
-
-      using Sensor = decltype(sensor);
-      typename std::remove_reference_t<Sensor>::Data my_data;
-      if (!sensor.measure(my_data))
-          return;
-  };
-  each_sensor(take_measurement);
-  delay(500);
+    delay(500);
+    //perform first measurement on all sensors
+    take_all_measurements();
+    delay(500);
 }
 
 void loop(void) {
@@ -67,30 +76,20 @@ void loop(void) {
 
     for (unsigned int i = 0; i < 10 ; i++)
     {
-#if 0
-        my_board.sleep(rt_clock);//sleep for one minute
-#else
+#if debug_mode
         delay(1000);
+#else
+        //Sleep for one minure
+        my_board.sleep();
 #endif
 
-        auto take_measurement = [&](auto &sensor, const char *name){
-            if (!sensor.valid())
-                return;
-
-            Serial.print(name); Serial.println(" is valid");
-
-            using Sensor = decltype(sensor);
-            typename std::remove_reference_t<Sensor>::Data my_data;
-            if (!sensor.measure(my_data))
-                return;
-
-            message.set(my_data);
-        };
-        each_sensor(take_measurement);
+        take_all_measurements();
 
         if (message.valid())
         {
+#if debug_mode
             message.print();
+#endif
             lora_com.set_message(&message);
         }
     }

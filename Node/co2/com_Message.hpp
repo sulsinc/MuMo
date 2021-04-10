@@ -8,18 +8,14 @@
 
 namespace com { 
 
+    //Collects all sensor data into a buffer, ready for sending over lora.
+    //The lowest version is used that can still handle the added data.
     class Message
     {
     public:
-        Message()
-        {
-            clear();
-        }
+        Message() { clear(); }
 
-        void clear()
-        {
-            memset(&buffer_, 0u, sizeof(buffer_));
-        }
+        void clear() { memset(&buffer_, 0u, sizeof(buffer_)); }
 
         unsigned char version() const {return buffer_[0u];}
 
@@ -29,8 +25,8 @@ namespace com {
         {
             set_minimal_version_(1u);
 
-            unsigned int ix = 1u;
-            write_uint8_(data.battery_percentage, ix);
+            unsigned int offset = 1u;
+            write_uint8_(data.battery_percentage, offset);
 
             return true;
         }
@@ -38,12 +34,12 @@ namespace com {
         {
             set_minimal_version_(1u);
 
-            unsigned int ix = 2u;
-            write_float8_8_(data.humidity, ix);
-            write_float8_8_(data.temperature, ix);
+            unsigned int offset = 2u;
+            write_float8_8_(data.humidity, offset);
+            write_float8_8_(data.temperature, offset);
             const unsigned long atmosferic_pressure = 101325; //In Pa
             const unsigned long pressure = (data.pressure - atmosferic_pressure) + 30000;
-            write_uint16_(pressure, ix);
+            write_uint16_(pressure, offset);
 
             return true;
         }
@@ -51,8 +47,8 @@ namespace com {
         {
             set_minimal_version_(1u);
 
-            unsigned int ix = 8u;
-            write_uint16_(data.lux, ix);
+            unsigned int offset = 8u;
+            write_uint16_(data.lux, offset);
 
             return true;
         }
@@ -60,10 +56,10 @@ namespace com {
         {
             set_minimal_version_(2u);
 
-            unsigned int ix = 10u;
-            write_uint16_(data.co2, ix);
-            write_float8_8_(data.temperature, ix);
-            write_float8_8_(data.relative_humidity, ix);
+            unsigned int offset = 10u;
+            write_uint16_(data.co2, offset);
+            write_float8_8_(data.temperature, offset);
+            write_float8_8_(data.relative_humidity, offset);
 
             return true;
         }
@@ -108,20 +104,29 @@ namespace com {
             if (minimal_version > version)
                 version = minimal_version;
         }
-        void write_uint8_(unsigned int v, unsigned int &ix)
+
+        //Integer number written as a single byte
+        //Range: [0, 255]
+        void write_uint8_(unsigned int v, unsigned int &offset)
         {
-            buffer_[ix++] = v;
+            buffer_[offset++] = v;
         }
-        void write_uint16_(unsigned int v, unsigned int &ix)
+
+        //Integer number written as two bytes, big-endian
+        //Range: [0, 65535]
+        void write_uint16_(unsigned int v, unsigned int &offset)
         {
-            buffer_[ix++] = (v >> 8);
-            buffer_[ix++] = (v % 256);
+            buffer_[offset++] = (v >> 8);
+            buffer_[offset++] = (v % 256);
         }
-        void write_float8_8_(float v, unsigned int &ix)
+
+        //Floating-point number written as its integral part (1 byte) and digits after the decimal point (1 byte)
+        //Range: [0.00, 255.99]
+        void write_float8_8_(float v, unsigned int &offset)
         {
             const int vi = v;
-            buffer_[ix++] = vi;
-            buffer_[ix++] = (v-vi)*100;
+            buffer_[offset++] = vi;
+            buffer_[offset++] = (v-vi)*100;
         }
 
         unsigned char buffer_[16u];

@@ -1,31 +1,44 @@
 #ifndef HEADER_board_LoraWan_hpp_ALREADY_INCLUDED
 #define HEADER_board_LoraWan_hpp_ALREADY_INCLUDED
 
-#include "clock_RealTime.hpp"
 #include <LoRaWan.h>
+#include <RTCZero.h>
 
 namespace board { 
+
     class LoraWan
     {
     public:
         struct Data
         {
-            unsigned int battery_percentage = 0;
+            unsigned int battery_percentage = 0u;
         };
 
         bool valid() const {return valid_;}
 
-        void setup(unsigned int baudrate = 115200)
+        void setup(unsigned int baudrate = 115200u)
         {
+            if (valid_)
+                return;
+
             Serial.begin(baudrate);
 
-            // LoRaWan Board hardware settings
-            for (unsigned char i = 0; i < 26; i ++) { // Important, set all pins to HIGH to save power during sleeps
-                pinMode(i, OUTPUT);
-                digitalWrite(i, HIGH);
+            //Set all pins to HIGH to save power during sleeps
+            for (unsigned int pin = 0; pin < 26; ++pin)
+            {
+                pinMode(pin, OUTPUT);
+                digitalWrite(pin, HIGH);
             }
-            pinMode(38, OUTPUT); //Specifically turn pin 38 OUTPUT and HIGH to activate the Grove connectors
-            digitalWrite(38, HIGH);
+
+            //Specifically turn pin 38 OUTPUT and HIGH to activate the Grove connectors
+            pinMode(38u, OUTPUT);
+            digitalWrite(38u, HIGH);
+
+            //Setup real-time clock
+            rtc0_.begin(false);
+            next_alarm_clock_ = rtc0_.getEpoch() + 60; // calculate the time of the first alarm (in one minute)
+            rtc0_.setAlarmEpoch(next_alarm_clock_);
+            rtc0_.enableAlarm(rtc0_.MATCH_SS); //check the alarm based on seconds, so we wake up every minute
 
             valid_ = true;
         }
@@ -35,10 +48,11 @@ namespace board {
             digitalWrite(LED_BUILTIN, on); //Turn the onboard led off now that we are joined
         }
 
-        void sleep(clock::RealTime &rtc)
+        void sleep()
         {
             SysTick->CTRL &= ~SysTick_CTRL_TICKINT_Msk;
-            rtc.deep_sleep();            // bring CPU into deep sleep mode (until woken up by the RTC)
+            //Bring CPU into deep sleep mode (until woken up by the RTC)
+            rtc0_.standbyMode();
             SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;
         }
 
@@ -69,7 +83,10 @@ namespace board {
 
     private:
         bool valid_ = false;
+        RTCZero rtc0_;
+        unsigned long next_alarm_clock_ = 0u;
     };
+
 } 
 
 #endif

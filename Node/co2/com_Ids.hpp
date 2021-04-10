@@ -1,9 +1,10 @@
-#ifndef HEADER_device_Info_hpp_ALREADY_INCLUDED
-#define HEADER_device_Info_hpp_ALREADY_INCLUDED
+#ifndef HEADER_com_Ids_hpp_ALREADY_INCLUDED
+#define HEADER_com_Ids_hpp_ALREADY_INCLUDED
 
-namespace device { 
+namespace com { 
 
-    struct Info
+    //Struct to hold the ids and key of this device and the TTN application
+    struct Ids
     {
         const char * device_EUI = nullptr;
         const char * application_EUI = nullptr;

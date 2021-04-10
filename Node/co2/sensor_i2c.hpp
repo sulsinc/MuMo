@@ -7,6 +7,7 @@ namespace sensor {
 
     namespace i2c { 
 
+        //Setup of Wire, required for the different I2C-based sensors
         inline void setup()
         {
             static bool s_init = false;

@@ -12,13 +12,16 @@ namespace sensor {
     public:
         struct Data
         {
-            unsigned int lux;
+            unsigned int lux = 0u;
         };
 
         bool valid() const {return valid_;}
 
         bool setup()
         {
+            if (valid_)
+                return;
+
             i2c::setup();
 
             if (!tsl_.begin())
