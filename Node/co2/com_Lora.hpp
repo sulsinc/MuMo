@@ -1,12 +1,11 @@
-#ifndef HEADER_network_Lora_hpp_ALREADY_INCLUDED
-#define HEADER_network_Lora_hpp_ALREADY_INCLUDED
+#ifndef HEADER_com_Lora_hpp_ALREADY_INCLUDED
+#define HEADER_com_Lora_hpp_ALREADY_INCLUDED
 
 #include "device_Info.hpp"
-#include "message_Version1.hpp"
-#include "message_Version2.hpp"
+#include "com_Message.hpp"
 #include <LoRaWan.h>
 
-namespace network { 
+namespace com { 
 
     class Lora
     {
@@ -54,13 +53,9 @@ namespace network {
             lora.setDeviceLowPower();     // turn the LoRaWAN module into sleep mode
         }
 
-        void set_message(message::Version1 *msg)
+        void set_message(Message *msg)
         {
-            msg_v1_ = msg;
-        }
-        void set_message(message::Version2 *msg)
-        {
-            msg_v2_ = msg;
+            msg_ = msg;
         }
 
         unsigned char *rx_data() {return rx_ptr_;}
@@ -68,39 +63,32 @@ namespace network {
 
         void process()
         {
-            auto try_send_message = [&](auto *&msg){
-                if (!msg)
-                    return false;
+            if (!msg_)
+                return;
 
-                lora.setPower(20); //Send a command to wake up the lora module
-                Serial.println("LoRa Awake!");
-                delay(200);
+            lora.setPower(20); //Send a command to wake up the lora module
+            Serial.println("LoRa Awake!");
+            delay(200);
 
-                Serial.println("<<<<<< Sending package to TTN! >>>>>>");
-                if (lora.transferPacket((unsigned char *)msg->data(), msg->size())) {
-                    short rssi;
-                    memset(&rx_, 0, sizeof(rx_));
-                    rx_size_ = lora.receivePacket(rx_, sizeof(rx_), &rssi);
+            Serial.println("<<<<<< Sending package to TTN! >>>>>>");
+            //transferPacket() needs an unsigned char * to work, char * seems to do something else
+            unsigned char *ptr = msg_->data();
+            if (lora.transferPacket(ptr, msg_->size())) {
+                short rssi;
+                memset(&rx_, 0, sizeof(rx_));
+                rx_size_ = lora.receivePacket(rx_, sizeof(rx_), &rssi);
 
-                    rx_ptr_ = (rx_size_ > 0) ? (unsigned char *)rx_ : nullptr;
-                }
+                rx_ptr_ = (rx_size_ > 0) ? (unsigned char *)rx_ : nullptr;
+            }
 
-                delay(20);
-                set_low_power();
+            delay(20);
+            set_low_power();
 
-                msg = nullptr;
-
-                return true;
-            };
-
-            //We send only one message per time
-            if (try_send_message(msg_v1_)) return;
-            if (try_send_message(msg_v2_)) return;
+            msg_ = nullptr;
         }
 
     private:
-        message::Version1 * msg_v1_ = nullptr;
-        message::Version2 * msg_v2_ = nullptr;
+        Message * msg_ = nullptr;
         char rx_[256];
         unsigned char *rx_ptr_ = nullptr;
         unsigned int rx_size_ = 0;

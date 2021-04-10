@@ -1,25 +1,8 @@
-
-//############   SENSOR SETTINGS   ###################################################
-//Sensor thresholds (FlashStorage overwrite with downlink) -----------
-#define allow_downlink true
-#define base_maximal_temperature 35
-#define base_minimal_temperature 8
-#define base_maximal_humidity 70
-#define base_minimal_humidity 15
-#define base_maximal_illumination 420
-#define base_range_pressure 22000
-#define base_sleepCycli 5
-
-//############   CODE INFORMATION   ###################################################
-int Version = 1;
-
-/*- DO NOT EDIT THE CODE BELOW THIS LINE -*/
 #include "sensor_BME680.hpp"
 #include "sensor_TSL2561.hpp"
 #include "sensor_SCD30.hpp"
-#include "message_Version1.hpp"
-#include "message_Version2.hpp"
-#include "network_Lora.hpp"
+#include "com_Message.hpp"
+#include "com_Lora.hpp"
 #include "board_LoraWan.hpp"
 #include "clock_RealTime.hpp"
 #include "device_subsoil.hpp"
@@ -43,10 +26,9 @@ void each_sensor(Ftor &&ftor)
     ftor(scd30, "SCD30");
 }
 
-/* message::Version1 my_message; */
-message::Version2 my_message;
+com::Message message;
 
-network::Lora lora_network;
+com::Lora lora_com;
 
 clock::RealTime rt_clock;
 
@@ -57,7 +39,7 @@ void setup(void) {
   each_sensor(setup_sensor);
 
   const auto device_info = device::subsoil();
-  lora_network.setup(device_info);
+  lora_com.setup(device_info);
 
   my_board.led(false);
 
@@ -81,7 +63,7 @@ void setup(void) {
 void loop(void) {
     Serial.println("########################## LOOP SEQUENCE #################################");
 
-    lora_network.process();
+    lora_com.process();
 
     for (unsigned int i = 0; i < 10 ; i++)
     {
@@ -91,7 +73,6 @@ void loop(void) {
         delay(1000);
 #endif
 
-        unsigned int measurement_count = 0;
         auto take_measurement = [&](auto &sensor, const char *name){
             if (!sensor.valid())
                 return;
@@ -103,15 +84,15 @@ void loop(void) {
             if (!sensor.measure(my_data))
                 return;
 
-            ++measurement_count;
-            my_message.set(my_data);
+            message.set(my_data);
         };
         each_sensor(take_measurement);
 
-        if (measurement_count > 0)
+        if (message.valid())
         {
-            my_message.print();
-            lora_network.set_message(&my_message);
+            message.print();
+            lora_com.set_message(&message);
+            message.clear();
         }
     }
 }
