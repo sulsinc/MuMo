@@ -21,7 +21,7 @@ namespace com {
             memset(&buffer_, 0u, sizeof(buffer_));
         }
 
-        const unsigned char version() const {return buffer_[0u];}
+        unsigned char version() const {return buffer_[0u];}
 
         bool valid() const {return version() > 0u;}
 

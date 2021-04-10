@@ -92,7 +92,6 @@ void loop(void) {
         {
             message.print();
             lora_com.set_message(&message);
-            message.clear();
         }
     }
 }

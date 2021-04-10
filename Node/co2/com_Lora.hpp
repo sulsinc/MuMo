@@ -72,8 +72,7 @@ namespace com {
 
             Serial.println("<<<<<< Sending package to TTN! >>>>>>");
             //transferPacket() needs an unsigned char * to work, char * seems to do something else
-            unsigned char *ptr = msg_->data();
-            if (lora.transferPacket(ptr, msg_->size())) {
+            if (lora.transferPacket((unsigned char *)msg_->data(), msg_->size())) {
                 short rssi;
                 memset(&rx_, 0, sizeof(rx_));
                 rx_size_ = lora.receivePacket(rx_, sizeof(rx_), &rssi);
@@ -84,6 +83,7 @@ namespace com {
             delay(20);
             set_low_power();
 
+            msg_->clear();
             msg_ = nullptr;
         }
 
