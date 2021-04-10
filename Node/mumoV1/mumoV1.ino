@@ -1,11 +1,11 @@
 //############   TTN SETTINGS   #######################################################
-#define device_EUI "0034CB1F3A1E17FE"
-#define application_EUI "70B3D57ED0037085"
-#define app_key "F10A9C97FF857E350092E410745AE7A9"
+#define device_EUI "00BEA0888A7FE90A"
+#define application_EUI "70B3D57ED003BB73"
+#define app_key "800317A9D6AAD3C045DFFC285592481F"
 
-#define device_address "26011300"
-#define network_session_key "1ACC5ADE5AFFCD5FED6EF37543B4604D"
-#define app_session_key "6DC61FB498B1AAE158D63475F5298B64"
+#define device_address "26013242"
+#define network_session_key "2D3311932EA0879115C6B4F7D8B73A8E"
+#define app_session_key "456DED8EE204D36B72CF00297CBFA484"
 
 //############   SENSOR SETTINGS   ###################################################
 //Sensor thresholds (FlashStorage overwrite with downlink) -----------
@@ -108,6 +108,10 @@ void setup(void) {
 void loop(void) {
   Serial.println("########################## LOOP SEQUENCE #################################");
 
+  Serial.println("Sending data:");
+  for (unsigned int ix = 0; ix < 10; ++ix)
+      Serial.println(data[ix]);
+
   if (loraSending() && allow_downlink) { //return downlink data received
     update_thresholds(); // change the threshold values in the flash if allowed
   }
@@ -118,7 +122,11 @@ void loop(void) {
 
   for (int i = 0; i < sleepCycli.read() ; i++) { // 10 sleep cycli of 60 seconds
 
+#if 0
     doSleep(); //sleep for one minute
+#else
+    delay(1000);
+#endif
 
     if (check_measurements()) { //an alarm was raised. Cut the sleepcycle and straight to send!
       alarm = true;

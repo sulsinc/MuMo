@@ -12,7 +12,6 @@ namespace sensor {
     public:
         struct Data
         {
-            bool valid = false;
             float co2 = -1.00;
             float temperature = -1.00;
             float relative_humidity = -1.00;
@@ -23,12 +22,9 @@ namespace sensor {
         {
             i2c::setup();
 
-            if (!scd_.begin()) {
-                while (1)
-                {
-                    Serial.println("Could not find SCD30 sensor.");
-                    delay(500);
-                }
+            if (!scd_.begin())
+            {
+                Serial.println("Could not find sensor SCD30.");
                 return false;
             }
 
@@ -45,7 +41,6 @@ namespace sensor {
             data.co2 = scd_.CO2;
             data.temperature = scd_.temperature;
             data.relative_humidity = scd_.relative_humidity;
-            data.valid = true;
             return true;
         }
 

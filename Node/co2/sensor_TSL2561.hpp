@@ -22,7 +22,10 @@ namespace sensor {
             i2c::setup();
 
             if (!tsl_.begin())
+            {
+                Serial.println("Could not find sensor TSL2561.");
                 return false;
+            }
 
             //-- Set up TSL2561 oversampling and gain --//
             tsl_.setGain(TSL2561_GAIN_16X);
@@ -39,6 +42,7 @@ namespace sensor {
 
             sensors_event_t event;
             tsl_.getEvent(&event);
+
             data.lux = event.light;
 
             return true;

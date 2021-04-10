@@ -19,12 +19,13 @@ namespace message {
             write_uint8(ptr, version);
         }
 
-        void set(const board::LoraWan::Data &data)
+        bool set(const board::LoraWan::Data &data)
         {
             char *ptr = buffer_+1;
             write_uint8(ptr, data.battery_percentage);
+            return true;
         }
-        void set(const sensor::BME680::Data &data)
+        bool set(const sensor::BME680::Data &data)
         {
             char *ptr = buffer_+2;
             write_float8_8(ptr, data.humidity);
@@ -32,11 +33,18 @@ namespace message {
             const unsigned long atmosferic_pressure = 101325; //In Pa
             const unsigned long pressure = (data.pressure - atmosferic_pressure) + 30000;
             write_uint16(ptr, pressure);
+            return true;
         }
-        void set(const sensor::TSL2561::Data &data)
+        bool set(const sensor::TSL2561::Data &data)
         {
             char *ptr = buffer_+8;
             write_uint16(ptr, data.lux);
+            return true;
+        }
+        template <typename Data>
+        bool set(const Data &data)
+        {
+            return false;
         }
 
         char *data() { return buffer_; }

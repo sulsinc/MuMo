@@ -20,8 +20,8 @@ function Decoder(bytes, port) {
     decoded.co2 = (bytes[10]<<8)
     decoded.co2 += bytes[11];
     decoded.temperature2 = (bytes[12]<<8);
-    decoded.temperature2 += bytes[13/100];
-    decoded.relative_humidity = (bytes[14]>>8);
+    decoded.temperature2 += bytes[13]/100;
+    decoded.relative_humidity = (bytes[14]<<8);
     decoded.relative_humidity = (bytes[15]);
   }
   return decoded;

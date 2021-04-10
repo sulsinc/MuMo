@@ -20,12 +20,13 @@ namespace message {
             write_uint8(ptr, version);
         }
 
-        void set(const board::LoraWan::Data &data)
+        bool set(const board::LoraWan::Data &data)
         {
             char *ptr = buffer_+1;
             write_uint8(ptr, data.battery_percentage);
+            return true;
         }
-        void set(const sensor::BME680::Data &data)
+        bool set(const sensor::BME680::Data &data)
         {
             char *ptr = buffer_+2;
             write_float8_8(ptr, data.humidity);
@@ -33,18 +34,21 @@ namespace message {
             const unsigned long atmosferic_pressure = 101325; //In Pa
             const unsigned long pressure = (data.pressure - atmosferic_pressure) + 30000;
             write_uint16(ptr, pressure);
+            return true;
         }
-        void set(const sensor::TSL2561::Data &data)
+        bool set(const sensor::TSL2561::Data &data)
         {
             char *ptr = buffer_+8;
             write_uint16(ptr, data.lux);
+            return true;
         }
-        void set(const sensor::SCD30::Data &data)
+        bool set(const sensor::SCD30::Data &data)
         {
             char *ptr = buffer_+10;
             write_uint16(ptr, data.co2);
             write_float8_8(ptr, data.temperature);
             write_float8_8(ptr, data.relative_humidity);
+            return true;
         }
 
         char *data() { return buffer_; }
@@ -53,8 +57,13 @@ namespace message {
         void print() const
         {
             Serial.println("Version2 message");
-            for (unsigned int i = 0; i < sizeof(buffer_); ++i)
-                Serial.println((int)buffer_[i]);
+            for (unsigned int ix = 0; ix < sizeof(buffer_); ++ix)
+            {
+                Serial.print("ix ");
+                Serial.print(ix);
+                Serial.print(": ");
+                Serial.println((int)buffer_[ix]);
+            }
         }
 
     private:

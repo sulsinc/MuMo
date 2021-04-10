@@ -4,9 +4,7 @@
 #include "device_Info.hpp"
 #include "message_Version1.hpp"
 #include "message_Version2.hpp"
-#define lora lora_do_not_use_global_name
 #include <LoRaWan.h>
-#undef lora
 
 namespace network { 
 
@@ -19,33 +17,33 @@ namespace network {
                 return false;
 
             //-- Start Lora module --//
-            lora_.init();
+            lora.init();
 
-            lora_.setId((char *)device_info.device_address, (char *)device_info.device_EUI, (char *)device_info.application_EUI); //devaddr, devEUI, appEUI
+            lora.setId((char *)device_info.device_address, (char *)device_info.device_EUI, (char *)device_info.application_EUI); //devaddr, devEUI, appEUI
 
-            lora_.setKey((char *)device_info.network_session_key, (char *)device_info.app_session_key, (char *)device_info.app_key); //nwkskey, appskey, appkey
+            lora.setKey((char *)device_info.network_session_key, (char *)device_info.app_session_key, (char *)device_info.app_key); //nwkskey, appskey, appkey
 
-            lora_.setDeciveMode(LWOTAA);
+            lora.setDeciveMode(LWOTAA);
 
-            lora_.setDataRate(DR0, EU868);
-            lora_.setAdaptiveDataRate(true);
+            lora.setDataRate(DR0, EU868);
+            lora.setAdaptiveDataRate(true);
 
-            lora_.setChannel(0, 868.1);
-            lora_.setChannel(1, 868.3);
-            lora_.setChannel(2, 868.5);
-            lora_.setChannel(3, 867.1);
-            lora_.setChannel(4, 867.3);
-            lora_.setChannel(5, 867.5);
-            lora_.setChannel(6, 867.7);
+            lora.setChannel(0, 868.1);
+            lora.setChannel(1, 868.3);
+            lora.setChannel(2, 868.5);
+            lora.setChannel(3, 867.1);
+            lora.setChannel(4, 867.3);
+            lora.setChannel(5, 867.5);
+            lora.setChannel(6, 867.7);
 
-            lora_.setReceiceWindowFirst(869.5, DR3);
-            lora_.setReceiceWindowSecond(869.5, DR3);
+            lora.setReceiceWindowFirst(869.5, DR3);
+            lora.setReceiceWindowSecond(869.5, DR3);
 
-            lora_.setPower(20);
+            lora.setPower(20);
 
             //Ping the TTN server to JOIN
             //TODO: do not hang forever
-            while (!lora_.setOTAAJoin(JOIN));
+            while (!lora.setOTAAJoin(JOIN));
 
             return true;
         }
@@ -53,7 +51,7 @@ namespace network {
         void set_low_power()
         {
             Serial.println("Lora into sleep modus");
-            lora_.setDeviceLowPower();     // turn the LoRaWAN module into sleep mode
+            lora.setDeviceLowPower();     // turn the LoRaWAN module into sleep mode
         }
 
         void set_message(message::Version1 *msg)
@@ -74,15 +72,15 @@ namespace network {
                 if (!msg)
                     return false;
 
-                lora_.setPower(20); //Send a command to wake up the lora module
+                lora.setPower(20); //Send a command to wake up the lora module
                 Serial.println("LoRa Awake!");
                 delay(200);
 
                 Serial.println("<<<<<< Sending package to TTN! >>>>>>");
-                if (lora_.transferPacket(msg->data(), msg->size())) {
+                if (lora.transferPacket((unsigned char *)msg->data(), msg->size())) {
                     short rssi;
                     memset(&rx_, 0, sizeof(rx_));
-                    rx_size_ = lora_.receivePacket(rx_, sizeof(rx_), &rssi);
+                    rx_size_ = lora.receivePacket(rx_, sizeof(rx_), &rssi);
 
                     rx_ptr_ = (rx_size_ > 0) ? (unsigned char *)rx_ : nullptr;
                 }
@@ -101,7 +99,6 @@ namespace network {
         }
 
     private:
-        LoRaWanClass lora_;
         message::Version1 * msg_v1_ = nullptr;
         message::Version2 * msg_v2_ = nullptr;
         char rx_[256];

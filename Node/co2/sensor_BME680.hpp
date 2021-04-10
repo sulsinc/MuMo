@@ -22,8 +22,9 @@ namespace sensor {
         {
             i2c::setup();
 
-            if (!bme_.begin(0x76)) {
-                Serial.println("Could not find BME680 sensor.");
+            if (!bme_.begin(0x76))
+            {
+                Serial.println("Could not find sensor BME680.");
                 return false;
             }
 
@@ -50,7 +51,7 @@ namespace sensor {
             data.humidity = bme_.humidity;
             data.pressure = bme_.pressure;
 
-            return false;
+            return true;
         }
 
     private:
