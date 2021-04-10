@@ -20,7 +20,7 @@ namespace sensor {
         bool setup()
         {
             if (valid_)
-                return;
+                return true;
 
             i2c::setup();
 
