@@ -49,7 +49,6 @@ namespace com {
 
         void set_low_power()
         {
-            Serial.println("Lora into sleep modus");
             //Turn the LoRaWAN module into sleep mode
             lora.setDeviceLowPower();
         }
@@ -64,11 +63,11 @@ namespace com {
             if (!msg_)
                 return;
 
-            lora.setPower(20); //Send a command to wake up the lora module
-            Serial.println("LoRa Awake!");
+            //Wake-up the lora module
+            lora.setPower(20);
             delay(200);
 
-            Serial.println("<<<<<< Sending package to TTN! >>>>>>");
+            Serial.print("Transferring Lora packet of "); Serial.print(msg_->size()); Serial.println(" bytes.");
             //transferPacket() needs an unsigned char * to work, char * seems to do something else
             if (lora.transferPacket((unsigned char *)msg_->data(), msg_->size())) {
                 short rssi;

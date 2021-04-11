@@ -2,6 +2,7 @@
 #define HEADER_sensor_BME680_hpp_ALREADY_INCLUDED
 
 #include "sensor_i2c.hpp"
+#include "stat_OutlierDetector.hpp"
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME680.h>
 
@@ -12,6 +13,8 @@ namespace sensor {
     public:
         struct Data
         {
+            bool is_outlier = false;
+
             float temperature = -1.00;
             float humidity = -1.00;
             long pressure = -1;
@@ -56,12 +59,20 @@ namespace sensor {
             data.humidity = bme_.humidity;
             data.pressure = bme_.pressure;
 
+            data.is_outlier = false;
+            if (temperature_od_.process(data.temperature))
+                data.is_outlier = true;
+            if (humidity_od_.process(data.humidity))
+                data.is_outlier = true;
+
             return true;
         }
 
     private:
         bool valid_ = false;
         Adafruit_BME680 bme_;
+        stat::OutlierDetector<float, 10> temperature_od_{1};
+        stat::OutlierDetector<float, 10> humidity_od_{1};
     };
 
 } 

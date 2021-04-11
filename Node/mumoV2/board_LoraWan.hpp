@@ -1,6 +1,7 @@
 #ifndef HEADER_board_LoraWan_hpp_ALREADY_INCLUDED
 #define HEADER_board_LoraWan_hpp_ALREADY_INCLUDED
 
+#include "stat_OutlierDetector.hpp"
 #include <LoRaWan.h>
 #include <RTCZero.h>
 
@@ -11,6 +12,8 @@ namespace board {
     public:
         struct Data
         {
+            bool is_outlier = false;
+
             unsigned int battery_percentage = 0u;
         };
 
@@ -76,6 +79,10 @@ namespace board {
                 percentage = constrain(percentage, 0, 105);
 
                 data.battery_percentage = percentage;
+
+                data.is_outlier = false;
+                if (battery_percentage_od_.process(data.battery_percentage))
+                    data.is_outlier = true;
             }
 
             return true;
@@ -85,6 +92,7 @@ namespace board {
         bool valid_ = false;
         RTCZero rtc0_;
         unsigned long next_alarm_clock_ = 0u;
+        stat::OutlierDetector<unsigned int, 10> battery_percentage_od_{1};
     };
 
 } 

@@ -12,6 +12,8 @@ namespace sensor {
     public:
         struct Data
         {
+            bool is_outlier = false;
+
             unsigned int lux = 0u;
         };
 
@@ -46,6 +48,7 @@ namespace sensor {
             sensors_event_t event;
             tsl_.getEvent(&event);
 
+            data.is_outlier = false;
             data.lux = event.light;
 
             return true;
