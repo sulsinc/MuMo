@@ -62,6 +62,11 @@ com::Lora lora_com;
 
 unsigned int send_message_countdown = 0;
 
+//Delay between different measurements
+//Give enough time for all the sensors to take a measurement
+//The SCD30 can take no faster than 1 measurement every 2 sec
+unsigned int measurement_delay_ms = 2500;
+
 void setup(void) {
     auto setup_sensor = [](auto &sensor, const char *name){
         sensor.setup();
@@ -73,9 +78,7 @@ void setup(void) {
 
     my_board.led(false);
 
-    //Give enough time for all the sensors to take a measurement
-    //The SCD30 can take no faster than 1 measurement every 2 sec
-    delay(2000);
+    delay(measurement_delay_ms);
 }
 
 void loop(void) {
@@ -119,7 +122,7 @@ void loop(void) {
 #if debug_mode
     //Give enough time for all the sensors to take a measurement
     //The SCD30 can take no faster than 1 measurement every 2 sec
-    delay(2000);
+    delay(measurement_delay_ms);
 #else
     //Sleep for one minute
     my_board.sleep();

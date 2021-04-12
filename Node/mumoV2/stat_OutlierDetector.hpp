@@ -21,8 +21,13 @@ namespace stat {
                 //Not enough measurements yet to make a measurement
                 return true;
 
-            const auto diff = v-avg;
-            return diff < -tolerance_ || diff > tolerance_;
+            auto abs_diff = v-avg;
+            if (abs_diff < 0)
+                abs_diff = -abs_diff;
+
+            const bool is_outlier = abs_diff > tolerance_;
+
+            return is_outlier;
         }
 
     private:
